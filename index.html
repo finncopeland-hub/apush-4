@@ -3,251 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Liberty Learner | APUSH Games</title>
+  <title>American Yawp Brainrot Reader</title>
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background: #f5f0e8; color: #1c1917; }
-    header { background: white; border-bottom: 1px solid #d6d3d1; position: sticky; top: 0; z-index: 10; }
-    .wrap { max-width: 1150px; margin: auto; padding: 24px; }
-    .top { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-    h1 { margin: 0; font-size: 42px; letter-spacing: -1px; }
-    h2 { font-size: 30px; margin: 0 0 8px; }
-    h3 { margin: 0 0 8px; }
-    p { line-height: 1.5; }
-    nav button, button { cursor: pointer; }
-    nav { display: flex; gap: 14px; flex-wrap: wrap; }
-    nav button { border: 0; background: transparent; font-weight: bold; font-size: 14px; }
-    nav button:hover { color: #dc2626; }
-    .grid { display: grid; gap: 24px; }
-    .hero { grid-template-columns: 2fr 1fr; align-items: stretch; }
-    .two { grid-template-columns: repeat(2, 1fr); }
-    .four { grid-template-columns: repeat(4, 1fr); }
-    .card { background: white; border: 1px solid #ddd6ce; border-radius: 28px; padding: 28px; box-shadow: 0 12px 28px rgba(0,0,0,.08); }
-    .dark { background: linear-gradient(135deg, #1c1917, #44403c); color: white; }
-    .muted { color: #78716c; }
-    .big { font-size: 52px; font-weight: 900; margin: 8px 0; }
-    .progress { height: 14px; background: #57534e; border-radius: 999px; overflow: hidden; }
-    .bar { height: 100%; width: 0%; background: #f87171; transition: .3s; }
-    .game-tile { padding: 0; overflow: hidden; }
-    .tile-top { height: 130px; padding: 22px; color: white; font-size: 44px; display: flex; justify-content: space-between; }
-    .red { background: linear-gradient(135deg, #ef4444, #fb923c); }
-    .blue { background: linear-gradient(135deg, #3b82f6, #22d3ee); }
-    .purple { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
-    .green { background: linear-gradient(135deg, #22c55e, #10b981); }
-    .tile-body { padding: 22px; }
-    .term-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    .term { min-height: 80px; border: 1px solid #d6d3d1; background: #f5f5f4; border-radius: 16px; padding: 10px; font-weight: 800; }
-    .term.selected { background: #1c1917; color: white; transform: scale(1.03); }
-    .solved { background: #dcfce7; border: 1px solid #86efac; border-radius: 16px; padding: 14px; margin-bottom: 10px; color: #14532d; }
-    .btn { border: 0; background: #1c1917; color: white; padding: 13px 18px; border-radius: 16px; font-weight: 800; }
-    .btn:hover { background: #dc2626; }
-    .btn.secondary { background: white; color: #1c1917; border: 1px solid #d6d3d1; }
-    .btn.secondary:hover { background: #f5f5f4; }
-    .letter-row { display: flex; justify-content: center; gap: 7px; margin: 8px 0; flex-wrap: wrap; }
-    .box, .letter-input { width: 46px; height: 46px; border: 2px solid #d6d3d1; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; text-align: center; text-transform: uppercase; }
-    .correct { background: #22c55e; color: white; border-color: #22c55e; }
-    .close { background: #facc15; border-color: #facc15; }
-    .wrong { background: #78716c; color: white; border-color: #78716c; }
-    .timeline-item { background: #f5f5f4; border: 1px solid #d6d3d1; border-radius: 16px; padding: 16px; font-weight: 800; margin: 8px 0; }
-    .quote { background: #f5f5f4; border: 1px solid #d6d3d1; border-radius: 18px; padding: 28px; font-size: 25px; font-weight: 900; font-style: italic; }
-    .choice { width: 100%; text-align: left; background: #fafaf9; border: 1px solid #d6d3d1; border-radius: 16px; padding: 15px; font-weight: 800; margin-top: 10px; }
-    .choice.good { background: #dcfce7; border-color: #86efac; }
-    .choice.bad { background: #fee2e2; border-color: #fca5a5; }
-    .meme-section { background: #0c0a09; color: white; border-radius: 28px; padding: 28px; }
-    .scroll { height: 680px; overflow-y: scroll; scroll-snap-type: y mandatory; border-radius: 24px; background: black; }
-    .meme { height: 680px; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #292524; background: linear-gradient(135deg, #1c1917, #450a0a); }
-    .phone { width: 330px; min-height: 590px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 34px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; text-align: center; }
-    .emoji { font-size: 80px; }
-    .tag { background: #ef4444; padding: 7px 11px; border-radius: 999px; font-size: 12px; font-weight: 900; display: inline-block; }
-    textarea { width: 100%; min-height: 130px; border: 1px solid #d6d3d1; border-radius: 16px; padding: 14px; font-family: Arial; }
-    @media (max-width: 900px) { .hero, .two, .four { grid-template-columns: 1fr; } .term-grid { grid-template-columns: repeat(2, 1fr); } h1 { font-size: 32px; } }
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f0e8;color:#1c1917}header{background:#fff;border-bottom:1px solid #d6d3d1;position:sticky;top:0;z-index:10}.wrap{max-width:1150px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px}h1{margin:0;font-size:40px;letter-spacing:-1px}h2{font-size:30px;margin:0 0 8px}p{line-height:1.5}.muted{color:#78716c}nav{display:flex;gap:12px;flex-wrap:wrap}nav button,button{cursor:pointer}nav button{border:0;background:transparent;font-weight:800}nav button:hover{color:#dc2626}.grid{display:grid;gap:24px}.hero{grid-template-columns:2fr 1fr}.two{grid-template-columns:repeat(2,1fr)}.four{grid-template-columns:repeat(4,1fr)}.card{background:#fff;border:1px solid #ddd6ce;border-radius:28px;padding:28px;box-shadow:0 12px 28px rgba(0,0,0,.08)}.dark{background:linear-gradient(135deg,#1c1917,#44403c);color:white}.big{font-size:52px;font-weight:900;margin:8px 0}.progress{height:14px;background:#57534e;border-radius:999px;overflow:hidden}.bar{height:100%;width:0%;background:#f87171;transition:.3s}.tile{padding:0;overflow:hidden}.tileTop{height:125px;padding:22px;color:white;font-size:44px}.red{background:linear-gradient(135deg,#ef4444,#fb923c)}.blue{background:linear-gradient(135deg,#3b82f6,#22d3ee)}.purple{background:linear-gradient(135deg,#8b5cf6,#ec4899)}.green{background:linear-gradient(135deg,#22c55e,#10b981)}.tileBody{padding:22px}.btn{border:0;background:#1c1917;color:white;padding:13px 18px;border-radius:16px;font-weight:900;margin:4px}.btn:hover{background:#dc2626}.secondary{background:white;color:#1c1917;border:1px solid #d6d3d1}.termGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.term{min-height:78px;border:1px solid #d6d3d1;background:#f5f5f4;border-radius:16px;padding:10px;font-weight:900}.selected{background:#1c1917!important;color:white!important}.solved{background:#dcfce7;border:1px solid #86efac;border-radius:16px;padding:14px;margin-bottom:10px;color:#14532d}.row{display:flex;justify-content:center;gap:7px;margin:8px 0;flex-wrap:wrap}.box,.letterInput{width:46px;height:46px;border:2px solid #d6d3d1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;text-align:center;text-transform:uppercase}.correct{background:#22c55e;color:white;border-color:#22c55e}.close{background:#facc15;border-color:#facc15}.wrong{background:#78716c;color:white;border-color:#78716c}.choice,.timelineItem{width:100%;text-align:left;background:#fafaf9;border:1px solid #d6d3d1;border-radius:16px;padding:15px;font-weight:800;margin-top:10px}.good{background:#dcfce7!important;border-color:#86efac!important}.bad{background:#fee2e2!important;border-color:#fca5a5!important}.quote{background:#f5f5f4;border:1px solid #d6d3d1;border-radius:18px;padding:28px;font-size:25px;font-weight:900;font-style:italic}.brainrot{background:#0c0a09;color:white;border-radius:28px;padding:28px}.phone{position:relative;height:680px;max-width:390px;margin:auto;overflow:hidden;border-radius:34px;border:1px solid rgba(255,255,255,.2);background:#111;box-shadow:0 24px 60px rgba(0,0,0,.45)}.vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}.fakebg{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#38bdf8,#22c55e 45%,#44403c 46%,#1c1917);overflow:hidden}.road{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:180px;height:390px;background:repeating-linear-gradient(180deg,#292524 0 34px,#44403c 34px 68px);clip-path:polygon(35% 0,65% 0,100% 100%,0 100%);animation:road 1s linear infinite}.runner{position:absolute;bottom:155px;left:50%;transform:translateX(-50%);font-size:72px;z-index:1;animation:bounce .45s infinite alternate}.overlay{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:26px;text-align:center;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.58));text-shadow:0 3px 12px rgba(0,0,0,.9)}.label{background:rgba(239,68,68,.96);padding:8px 12px;border-radius:999px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;align-self:center;margin-bottom:18px}.overlay h3{font-size:32px;line-height:1.08;margin-bottom:18px}.overlay p{font-size:22px;font-weight:900;line-height:1.25;color:white}select,textarea{width:100%;padding:14px;border-radius:14px;border:1px solid #d6d3d1;font-weight:800;margin:10px 0}textarea{min-height:125px;font-family:Arial;font-weight:400}@keyframes road{from{background-position-y:0}to{background-position-y:68px}}@keyframes bounce{from{transform:translateX(-50%) translateY(0)}to{transform:translateX(-50%) translateY(-12px)}}@media(max-width:900px){.hero,.two,.four{grid-template-columns:1fr}.termGrid{grid-template-columns:repeat(2,1fr)}h1{font-size:30px}}
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap top">
-      <div>
-        <h1>Liberty Learner</h1>
-        <div class="muted">APUSH Games, MCQ Practice, Writing Help & Memes</div>
-      </div>
-      <nav>
-        <button onclick="jump('games')">Games</button>
-        <button onclick="jump('mcq')">MCQ</button>
-        <button onclick="jump('writing')">Writing</button>
-        <button onclick="jump('memes')">Memes</button>
-      </nav>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <section class="grid hero">
-      <div class="card">
-        <h2>APUSH Game Hub</h2>
-        <p class="muted">Play fast games that build APUSH recall without feeling like a worksheet.</p>
-        <div class="grid two">
-          <div class="card"><h3>🎮 Games</h3><p>Connections, Word Guess, Timeline Rush, and Quote Rush.</p></div>
-          <div class="card"><h3>📝 Practice</h3><p>MCQ practice and writing help for DBQs, LEQs, and SAQs.</p></div>
-        </div>
-      </div>
-      <div class="card dark">
-        <div>Today’s Study Goal</div>
-        <div class="big"><span id="doneCount">0</span>/3</div>
-        <p>Complete three activities today.</p>
-        <div class="progress"><div id="goalBar" class="bar"></div></div>
-      </div>
-    </section>
-
-    <section id="games" style="margin-top:40px;">
-      <h2>Game Modes</h2>
-      <p class="muted">Replayable APUSH games that regenerate.</p>
-      <div class="grid four">
-        <div class="card game-tile"><div class="tile-top red">🧩</div><div class="tile-body"><h3>APUSH Connections</h3><p>Group mixed terms into hidden categories.</p></div></div>
-        <div class="card game-tile"><div class="tile-top blue">🔤</div><div class="tile-body"><h3>Word Guess</h3><p>Guess APUSH vocab with hard clues.</p></div></div>
-        <div class="card game-tile"><div class="tile-top purple">⏳</div><div class="tile-body"><h3>Timeline Rush</h3><p>Put events in historical order.</p></div></div>
-        <div class="card game-tile"><div class="tile-top green">💬</div><div class="tile-body"><h3>Quote Rush</h3><p>Guess the historical figure.</p></div></div>
-      </div>
-    </section>
-
-    <section class="grid two" style="margin-top:40px;">
-      <div class="card">
-        <h2>APUSH Connections</h2>
-        <p class="muted">Select four related terms.</p>
-        <div id="solvedGroups"></div>
-        <div id="connectionGrid" class="term-grid"></div>
-        <p id="connectionMsg"></p>
-        <button class="btn" onclick="submitConnection()">Submit</button>
-        <button class="btn secondary" onclick="newConnection()">New Puzzle</button>
-      </div>
-
-      <div class="card">
-        <h2>APUSH Word Guess</h2>
-        <p class="muted">Hard clue: <b id="wordClue"></b></p>
-        <div id="wordRows"></div>
-        <div id="letterInputs" class="letter-row"></div>
-        <p id="wordMsg"></p>
-        <button class="btn" onclick="submitWord()">Guess</button>
-        <button class="btn secondary" onclick="newWord()">New Word</button>
-      </div>
-
-      <div class="card">
-        <h2>Timeline Rush</h2>
-        <p class="muted">Earliest to latest.</p>
-        <div id="timelineList"></div>
-        <p id="timelineMsg"></p>
-        <button class="btn" onclick="shuffleTimeline()">Shuffle</button>
-        <button class="btn secondary" onclick="checkTimeline()">Check Order</button>
-      </div>
-
-      <div class="card">
-        <h2>Quote Rush</h2>
-        <p class="muted">Who said it?</p>
-        <div id="quoteBox" class="quote"></div>
-        <div id="quoteChoices"></div>
-        <button class="btn" onclick="newQuote()" style="margin-top:14px;">New Quote</button>
-      </div>
-    </section>
-
-    <section id="mcq" class="card" style="margin-top:40px;">
-      <h2>Practice MCQ Page</h2>
-      <p class="muted">AP-style multiple choice practice.</p>
-      <div id="mcqBox"></div>
-      <button class="btn" onclick="newMCQ()">New MCQ</button>
-    </section>
-
-    <section id="writing" class="card" style="margin-top:40px;">
-      <h2>Writing Help Page</h2>
-      <p class="muted">Plan DBQs, LEQs, and SAQs.</p>
-      <div class="grid two">
-        <div><h3>Thesis Builder</h3><textarea placeholder="Write your thesis here..."></textarea></div>
-        <div><h3>Evidence Bank</h3><textarea placeholder="List specific evidence here..."></textarea></div>
-        <div><h3>Contextualization</h3><textarea placeholder="What broader historical trend connects?"></textarea></div>
-        <div><h3>Rubric Checklist</h3><p>✅ Thesis<br>✅ Context<br>✅ Evidence<br>✅ Reasoning<br>✅ Complexity</p></div>
-      </div>
-    </section>
-
-    <section id="memes" class="meme-section" style="margin-top:40px;">
-      <h2>Vertical APUSH Meme Feed</h2>
-      <p class="muted">Scroll vertically. APUSH memes only.</p>
-      <div id="memeScroll" class="scroll"></div>
-    </section>
-  </main>
-
-  <script>
-    const connectionSets = [
-      { groups: { 'Founding Documents': ['Declaration of Independence','Articles of Confederation','Constitution','Federalist Papers'], 'Early Politics': ['Federalists','Democratic-Republicans','Hamilton','Jefferson'], 'Market Revolution': ['Erie Canal','Lowell System','Cotton Gin','Telegraph'], 'Expansion': ['Manifest Destiny','Mexican-American War','Oregon Trail','Treaty of Guadalupe Hidalgo'] } },
-      { groups: { 'Court Cases': ['Marbury v. Madison','Dred Scott','Plessy v. Ferguson','Brown v. Board'], 'Reforms': ['Abolitionism','Temperance','Women’s Suffrage','Second Great Awakening'], 'Cold War': ['Truman Doctrine','Marshall Plan','NATO','Containment'], 'New Deal': ['CCC','WPA','Social Security Act','FDIC'] } }
-    ];
-    const words = [
-      { answer:'TARIFF', clue:'Trade tax' }, { answer:'EMBARGO', clue:'Trade ban' }, { answer:'FEDERAL', clue:'National power' },
-      { answer:'NEWDEAL', clue:'FDR programs' }, { answer:'TRUMAN', clue:'Containment president' }, { answer:'MONROE', clue:'Doctrine president' }
-    ];
-    const timelineMaster = ['Louisiana Purchase','Missouri Compromise','Compromise of 1850','Civil War Begins','Reconstruction Ends','Spanish-American War','New Deal','Brown v. Board','Vietnam War'];
-    const quotes = [
-      { quote:'The only thing we have to fear is fear itself.', answer:'Franklin Roosevelt', options:['Franklin Roosevelt','Theodore Roosevelt','Woodrow Wilson','Harry Truman'] },
-      { quote:'Speak softly and carry a big stick.', answer:'Theodore Roosevelt', options:['Andrew Jackson','Theodore Roosevelt','Dwight Eisenhower','John Adams'] },
-      { quote:'A house divided against itself cannot stand.', answer:'Abraham Lincoln', options:['Frederick Douglass','Thomas Jefferson','Abraham Lincoln','Ulysses Grant'] }
-    ];
-    const mcqs = [
-      { stimulus:'Late-1800s farmers argued railroads and banks unfairly hurt rural Americans.', question:'Which movement reflected this concern?', choices:['Populist Movement','Great Society','Second Great Awakening','Lost Generation'], answer:'Populist Movement', explanation:'Populists focused on railroad regulation and monetary reform.' },
-      { stimulus:'The federal government increased overseas involvement in the late 1800s.', question:'Which event best supports this?', choices:['Spanish-American War','Whiskey Rebellion','Shays Rebellion','Seneca Falls Convention'], answer:'Spanish-American War', explanation:'The war marked major overseas expansion.' }
-    ];
-    const memes = [
-      ['🏦','Hamilton defending the bank','When someone says the Constitution does not mention a bank.'],
-      ['💥','Jackson vs. the Bank','The Second Bank sees Andrew Jackson log on.'],
-      ['🗺️','Manifest Destiny','The map gets bigger and so does sectional tension.'],
-      ['📰','Muckrakers','Me after reading one suspicious meatpacking report.'],
-      ['🧊','Cold War containment','Trying to stop communism like a group project problem.']
-    ];
-
-    let completed = new Set();
-    function complete(name){ completed.add(name); document.getElementById('doneCount').textContent = Math.min(completed.size,3); document.getElementById('goalBar').style.width = Math.min(completed.size/3*100,100)+'%'; }
-    function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-    function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
-    function jump(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
-
-    let currentConnection, selected=[], solved=[];
-    function newConnection(){ currentConnection = rand(connectionSets); selected=[]; solved=[]; renderConnection(); }
-    function renderConnection(){
-      const terms = shuffle(Object.values(currentConnection.groups).flat()).filter(t => !solved.flatMap(g=>currentConnection.groups[g]).includes(t));
-      document.getElementById('solvedGroups').innerHTML = solved.map(g=>`<div class="solved"><b>${g}</b><br>${currentConnection.groups[g].join(', ')}</div>`).join('');
-      document.getElementById('connectionGrid').innerHTML = terms.map(t=>`<button class="term ${selected.includes(t)?'selected':''}" onclick="toggleTerm('${t.replace(/'/g,"\\'")}')">${t}</button>`).join('');
-      document.getElementById('connectionMsg').textContent = 'Select four related terms.';
-    }
-    function toggleTerm(t){ if(selected.includes(t)) selected=selected.filter(x=>x!==t); else if(selected.length<4) selected.push(t); renderConnection(); }
-    function submitConnection(){
-      if(selected.length!==4){ document.getElementById('connectionMsg').textContent='Pick exactly four.'; return; }
-      const match = Object.keys(currentConnection.groups).find(g => selected.every(t=>currentConnection.groups[g].includes(t)));
-      if(match){ solved.push(match); selected=[]; if(solved.length===4) complete('connections'); renderConnection(); }
-      else document.getElementById('connectionMsg').textContent='Not quite. Try another group.';
-    }
-
-    let word, guesses=[], currentLetters=[];
-    function newWord(){ word=rand(words); guesses=[]; currentLetters=Array(word.answer.length).fill(''); renderWord(); }
-    function renderWord(){
-      document.getElementById('wordClue').textContent=word.clue;
-      document.getElementById('wordRows').innerHTML = Array.from({length:6}).map((_,r)=>`<div class="letter-row">${Array.from({length:word.answer.length}).map((_,i)=>{ const l=(guesses[r]||'')[i]||''; let c='box'; if(l){ c += word.answer[i]===l?' correct':word.answer.includes(l)?' close':' wrong'; } return `<div class="${c}">${l}</div>` }).join('')}</div>`).join('');
-      document.getElementById('letterInputs').innerHTML = currentLetters.map((l,i)=>`<input class="letter-input" maxlength="1" value="${l}" oninput="typeLetter(this,${i})">`).join('');
-      document.getElementById('wordMsg').textContent='Type into the boxes.';
-    }
-    function typeLetter(el,i){ currentLetters[i]=el.value.toUpperCase().replace(/[^A-Z]/g,'').slice(-1); el.value=currentLetters[i]; if(el.value && el.nextElementSibling) el.nextElementSibling.focus(); }
-    function submitWord(){ const g=currentLetters.join(''); if(g.length!==word.answer.length || currentLetters.includes('')){ document.getElementById('wordMsg').textContent='Fill every box.'; return; } guesses.push(g); currentLetters=Array(word.answer.length).fill(''); if(g===word.answer) complete('word'); renderWord(); if(g===word.answer) document.getElementById('wordMsg').textContent='Correct!'; }
-
-    let timeline=[];
-    function newTimeline(){ timeline=shuffle(timelineMaster).slice(0,4); renderTimeline(); }
-    function renderTimeline(){ document.getElementById('timelineList').innerHTML=timeline.map(e=>`<div class="timeline-item">${e}</div>`).join(''); }
-    function shuffleTimeline(){ timeline=shuffle(timeline); renderTimeline(); }
-    function checkTimeline(){ const correct=[...timeline].sort((a,b)=>timelineMaster.indexOf(a)-timelineMaster.indexOf(b)); const ok=JSON.stringify(timeline)===JSON.stringify(correct); document.getElementById('timelineMsg').textContent=ok?'Correct!':'Not quite. Press shuffle and try again.'; if(ok) complete('timeline'); }
-
-    let quote;
-    function newQuote(){ quote=rand(quotes); document.getElementById('quoteBox').textContent='“'+quote.quote+'”'; document.getElementById('quoteChoices').innerHTML=quote.options.map(o=>`<button class="choice" onclick="pickQuote(this,'${o}')">${o}</button>`).join(''); }
-    function pickQuote(btn,o){ [...document.querySelectorAll('#quoteChoices .choice')].forEach(b=>b.disabled=true); if(o===quote.answer){ btn.classList.add('good'); complete('quote'); } else { btn.classList.add('bad'); } }
-
-    function newMCQ(){ const m=rand(mcqs); document.getElementById('mcqBox').innerHTML=`<div class="card"><p><b>Stimulus:</b> ${m.stimulus}</p><h3>${m.question}</h3>${m.choices.map(c=>`<button class="choice" onclick="answerMCQ(this,'${c}','${m.answer}','${m.explanation}')">${c}</button>`).join('')}<p id="mcqExplain"></p></div>`; }
-    function answerMCQ(btn,c,a,e){ btn.classList.add(c===a?'good':'bad'); document.getElementById('mcqExplain').textContent=e; }
-
-    function renderMemes(){ document.getElementById('memeScroll').innerHTML=memes.map((m,i)=>`<div class="meme"><div class="phone"><div><span class="tag">APUSH Meme #${i+1}</span></div><div><div class="emoji">${m[0]}</div><h2>${m[1]}</h2><p>${m[2]}</p></div><div>❤️ Review · 💬 Explain · ↗ Share</div></div></div>`).join(''); }
-
-    newConnection(); newWord(); newTimeline(); newQuote(); newMCQ(); renderMemes();
-  </script>
+<header><div class="wrap top"><div><h1>American Yawp Brainrot Reader</h1><div class="muted">APUSH games, MCQ practice, writing help, and brainrot explainers</div></div><nav><button onclick="jump('games')">Games</button><button onclick="jump('reader')">Brainrot Reader</button><button onclick="jump('mcq')">MCQ</button><button onclick="jump('writing')">Writing</button></nav></div></header>
+<main class="wrap">
+<section class="grid hero"><div class="card"><h2>American Yawp Brainrot Reader</h2><p class="muted">A full APUSH study site with replayable games, practice MCQs, writing tools, and chapter explainers with gameplay backgrounds and human voice narration.</p><div class="grid two"><div class="card"><h3>🎮 Games</h3><p>Connections, Word Guess, Timeline Rush, and Quote Rush.</p></div><div class="card"><h3>🎧 Brainrot Reader</h3><p>Pick a chapter and section, play the ElevenLabs audio, and watch gameplay behind the captions.</p></div></div></div><div class="card dark"><div>Today’s Study Goal</div><div class="big"><span id="doneCount">0</span>/3</div><p>Complete three activities today.</p><div class="progress"><div id="goalBar" class="bar"></div></div></div></section>
+<section id="games" style="margin-top:40px"><h2>Game Modes</h2><p class="muted">Fast replayable APUSH review games.</p><div class="grid four"><div class="card tile"><div class="tileTop red">🧩</div><div class="tileBody"><h3>APUSH Connections</h3><p>Group terms into hidden APUSH categories.</p></div></div><div class="card tile"><div class="tileTop blue">🔤</div><div class="tileBody"><h3>Word Guess</h3><p>Wordle-style vocab with hard clues.</p></div></div><div class="card tile"><div class="tileTop purple">⏳</div><div class="tileBody"><h3>Timeline Rush</h3><p>Put events in historical order.</p></div></div><div class="card tile"><div class="tileTop green">💬</div><div class="tileBody"><h3>Quote Rush</h3><p>Guess the historical figure.</p></div></div></div></section>
+<section class="grid two" style="margin-top:40px"><div class="card"><h2>APUSH Connections</h2><p class="muted">Select four related terms.</p><div id="solvedGroups"></div><div id="connectionGrid" class="termGrid"></div><p id="connectionMsg"></p><button class="btn" onclick="submitConnection()">Submit</button><button class="btn secondary" onclick="newConnection()">New Puzzle</button></div><div class="card"><h2>APUSH Word Guess</h2><p class="muted">Hard clue: <b id="wordClue"></b></p><div id="wordRows"></div><div id="letterInputs" class="row"></div><p id="wordMsg"></p><button class="btn" onclick="submitWord()">Guess</button><button class="btn secondary" onclick="newWord()">New Word</button></div><div class="card"><h2>Timeline Rush</h2><p class="muted">Earliest to latest.</p><div id="timelineList"></div><p id="timelineMsg"></p><button class="btn" onclick="shuffleTimeline()">Shuffle</button><button class="btn secondary" onclick="checkTimeline()">Check Order</button></div><div class="card"><h2>Quote Rush</h2><p class="muted">Who said it?</p><div id="quoteBox" class="quote"></div><div id="quoteChoices"></div><button class="btn" onclick="newQuote()" style="margin-top:14px">New Quote</button></div></section>
+<section id="reader" class="brainrot" style="margin-top:40px"><h2>Brainrot APUSH Explainer</h2><p class="muted">Choose a Yawp chapter and section. Upload MP3s named <b>yawp-1-1.mp3</b>, <b>yawp-1-2.mp3</b>, etc. Upload videos named <b>subway.mp4</b> and <b>parkour.mp4</b>.</p><div class="grid two" style="align-items:start"><div class="card" style="background:#1c1917;color:white;border-color:#44403c"><h3>Choose Chapter</h3><select id="chapterSelect" onchange="updateSectionSelect()"></select><h3>Choose Section</h3><select id="sectionSelect" onchange="loadBrainrotChapter()"></select><h3>Human Voice Audio</h3><audio id="brainrotAudio" controls style="width:100%;margin:10px 0 12px"></audio><div><button class="btn" onclick="loadBrainrotChapter()">Load Section</button><button class="btn secondary" onclick="playHumanVoice()">Play Human Voice</button><button class="btn secondary" onclick="pauseHumanVoice()">Pause</button><button class="btn secondary" onclick="nextSection()">Next Section</button></div><p style="font-size:13px;color:#d6d3d1;margin-top:18px">Based on chapter topics from <i>The American Yawp</i>, licensed CC BY-SA 4.0.</p></div><div class="phone"><video id="brainrotVideo" class="vid" src="subway.mp4" autoplay muted loop playsinline onerror="tryNextBrainrotVideo()"></video><div class="fakebg"><div class="runner">🏃‍♂️</div><div class="road"></div></div><div class="overlay"><div class="label">American Yawp Brainrot Reader</div><h3 id="brainrotTitle">Select a chapter</h3><p id="brainrotText">Choose a chapter and section, then press Load Section.</p></div></div></div></section>
+<section id="mcq" class="card" style="margin-top:40px"><h2>Practice MCQ Page</h2><p class="muted">AP-style multiple choice practice.</p><div id="mcqBox"></div><button class="btn" onclick="newMCQ()">New MCQ</button></section>
+<section id="writing" class="card" style="margin-top:40px"><h2>Writing Help Page</h2><p class="muted">Plan DBQs, LEQs, and SAQs.</p><div class="grid two"><div><h3>Thesis Builder</h3><textarea placeholder="Write your thesis here..."></textarea></div><div><h3>Evidence Bank</h3><textarea placeholder="List specific evidence here..."></textarea></div><div><h3>Contextualization</h3><textarea placeholder="What broader historical trend connects?"></textarea></div><div><h3>Rubric Checklist</h3><p>✅ Thesis<br>✅ Context<br>✅ Evidence<br>✅ Reasoning<br>✅ Complexity</p></div></div></section>
+</main>
+<script>
+const connectionSets=[{groups:{'Founding Documents':['Declaration of Independence','Articles of Confederation','Constitution','Federalist Papers'],'Early Politics':['Federalists','Democratic-Republicans','Hamilton','Jefferson'],'Market Revolution':['Erie Canal','Lowell System','Cotton Gin','Telegraph'],'Expansion':['Manifest Destiny','Mexican-American War','Oregon Trail','Treaty of Guadalupe Hidalgo']}},{groups:{'Court Cases':['Marbury v. Madison','Dred Scott','Plessy v. Ferguson','Brown v. Board'],'Reforms':['Abolitionism','Temperance','Women’s Suffrage','Second Great Awakening'],'Cold War':['Truman Doctrine','Marshall Plan','NATO','Containment'],'New Deal':['CCC','WPA','Social Security Act','FDIC']}}];
+const words=[{answer:'TARIFF',clue:'Trade tax'},{answer:'EMBARGO',clue:'Trade ban'},{answer:'FEDERAL',clue:'National power'},{answer:'NEWDEAL',clue:'FDR programs'},{answer:'TRUMAN',clue:'Containment president'},{answer:'MONROE',clue:'Doctrine president'}];
+const timelineMaster=['Louisiana Purchase','Missouri Compromise','Compromise of 1850','Civil War Begins','Reconstruction Ends','Spanish-American War','New Deal','Brown v. Board','Vietnam War'];
+const quotes=[{quote:'The only thing we have to fear is fear itself.',answer:'Franklin Roosevelt',options:['Franklin Roosevelt','Theodore Roosevelt','Woodrow Wilson','Harry Truman']},{quote:'Speak softly and carry a big stick.',answer:'Theodore Roosevelt',options:['Andrew Jackson','Theodore Roosevelt','Dwight Eisenhower','John Adams']},{quote:'A house divided against itself cannot stand.',answer:'Abraham Lincoln',options:['Frederick Douglass','Thomas Jefferson','Abraham Lincoln','Ulysses Grant']}];
+const mcqs=[{stimulus:'Late-1800s farmers argued railroads and banks unfairly hurt rural Americans.',question:'Which movement reflected this concern?',choices:['Populist Movement','Great Society','Second Great Awakening','Lost Generation'],answer:'Populist Movement',explanation:'Populists focused on railroad regulation and monetary reform.'},{stimulus:'The federal government increased overseas involvement in the late 1800s.',question:'Which event best supports this?',choices:['Spanish-American War','Whiskey Rebellion','Shays Rebellion','Seneca Falls Convention'],answer:'Spanish-American War',explanation:'The war marked major overseas expansion.'}];
+const chapterNames=['The New World','Colliding Cultures','British North America','Colonial Society','The American Revolution','A New Nation','The Early Republic','The Market Revolution','Democracy in America','Religion and Reform','The Cotton Revolution','Manifest Destiny','The Sectional Crisis','The Civil War','Reconstruction','Capital and Labor','Conquering the West','Life in Industrial America','American Empire','The Progressive Era','World War I and Its Aftermath','The New Era','The Great Depression','World War II','The Cold War','The Affluent Society','The Sixties','The Unraveling','The Triumph of the Right','The Recent Past'];
+const sectionNames=['Big Idea','Main Developments','Conflict and Change','APUSH Takeaway'];
+const sectionText={
+1:['American history did not begin in 1492. Native societies already had complex cultures, agriculture, trade networks, cities, and governments before Europeans arrived.','Native communities adapted to different environments through farming, hunting, fishing, irrigation, trade, and land management.','The Columbian Exchange connected continents through plants, animals, disease, people, and ideas. It transformed the world but devastated many Native communities.','Remember diversity, geography, exchange, and disruption. The Americas were already complex before contact.'],
+2:['European colonization created conflict, trade, disease, religious conversion, and new power struggles.','Spain, France, England, and others competed for land, wealth, labor, and influence.','Native peoples resisted, adapted, negotiated, and formed alliances. Colonization was never one-sided.','Connect colonization to empire, religion, labor systems, disease, and the Atlantic World.'],
+3:['British colonies developed differently because of geography, religion, economics, and labor systems.','New England, Chesapeake, Middle, and Southern colonies each developed distinct societies.','Indentured servitude declined as racial slavery became more central, especially in plantation economies.','Compare regions and explain how geography and labor shaped colonial development.'],
+4:['Colonial society expanded through trade, slavery, immigration, religion, and population growth.','The Great Awakening challenged authority through emotional revivalism and personal faith.','The Enlightenment emphasized reason, natural rights, and consent of the governed.','Colonial identity grew, but inequality and regional differences remained strong.'],
+5:['The Revolution grew from conflicts over taxation, representation, rights, and imperial power.','British taxes after the French and Indian War increased colonial resistance.','The Declaration used Enlightenment ideas about rights and consent.','The Revolution expanded republican ideals but left slavery and inequality unresolved.'],
+6:['Americans had to build a stable government without recreating monarchy.','The Articles of Confederation were weak and struggled with taxes, trade, and rebellion.','The Constitution strengthened federal power through compromise, checks and balances, and federalism.','Compare the Articles and Constitution, and remember the Federalist versus Anti-Federalist debate.'],
+7:['The early republic centered on parties, economic policy, foreign policy, and federal power.','Hamilton and Jefferson disagreed over banking, manufacturing, farming, and constitutional interpretation.','Expansion and foreign conflict shaped the Louisiana Purchase and War of 1812.','Early political debates shaped long-term American politics.'],
+8:['The Market Revolution transformed transportation, communication, labor, and economic life.','Canals, roads, steamboats, railroads, factories, and the telegraph connected markets.','Industrial labor changed family life, gender roles, cities, class divisions, and immigration.','Connect economic change to reform, inequality, migration, and sectional tension.'],
+9:['Jacksonian democracy expanded politics for many white men while excluding others.','Campaigning, parties, and voting expanded for white men, but democracy remained limited.','Indian Removal, the Bank War, and presidential power defined Jacksonian politics.','This era is about democracy and exclusion happening at the same time.'],
+10:['Religious revival inspired reform movements across American society.','The Second Great Awakening promoted moral reform and activism.','Abolitionism, temperance, women’s rights, education reform, and prison reform grew.','Connect reform to religion, democracy, slavery, and the Market Revolution.'],
+11:['Cotton transformed the South and expanded slavery.','The cotton gin made cotton profitable and increased demand for enslaved labor.','The domestic slave trade forced enslaved people into the Deep South.','Cotton wealth depended on slavery and intensified sectional conflict.'],
+12:['Manifest Destiny pushed Americans west through migration, war, and conquest.','Texas, Oregon, and the Mexican-American War expanded U.S. territory.','Expansion displaced Native and Mexican communities while raising the slavery question.','Expansion intensified sectional conflict over whether slavery would spread west.'],
+13:['The sectional crisis emerged because compromise over slavery failed.','The Compromise of 1850, Kansas-Nebraska Act, and Bleeding Kansas escalated tension.','Dred Scott and Lincoln’s election pushed the South toward secession.','The Civil War came from conflict over slavery, especially its expansion.'],
+14:['The Civil War was fought over slavery, union, and political power.','The Union used industrial and population advantages while the Confederacy fought defensively.','Emancipation transformed the war into a fight over freedom as well as union.','Know causes, turning points, emancipation, and consequences.'],
+15:['Reconstruction tried to rebuild the South and define freedom after slavery.','The 13th, 14th, and 15th Amendments transformed the Constitution.','White supremacist violence and political compromise weakened Reconstruction.','Reconstruction brought major change but failed to secure long-term equality.'],
+16:['Industrialization created corporations, wealth, dangerous work, and labor conflict.','Railroads, steel, oil, finance, trusts, and monopolies reshaped the economy.','Workers organized unions but faced courts, police, strikebreakers, and government opposition.','The Gilded Age mixed growth, inequality, and conflict between capital and labor.'],
+17:['Western expansion involved railroads, mining, ranching, farming, and conquest.','The federal government supported settlement through railroads and land policies.','Native peoples resisted removal, reservations, and assimilation policies like the Dawes Act.','The frontier was not empty. It was conquered and transformed.'],
+18:['Industrialization changed city life, immigration, politics, and culture.','Millions of immigrants arrived and cities grew rapidly around factories.','Political machines, settlement houses, poverty, and reform shaped urban life.','Industrial cities created both opportunity and hardship.'],
+19:['The United States became an overseas empire through war, trade, and military power.','The Spanish-American War gave the U.S. territories and global influence.','Americans debated whether empire matched democratic values.','The U.S. became a global power by the early 1900s.'],
+20:['Progressives tried to fix problems caused by industrialization and urbanization.','Muckrakers exposed corruption, unsafe food, poverty, and monopolies.','Progressivism expanded reform but often excluded marginalized groups.','Progressivism expanded government action but had major limits.'],
+21:['World War I expanded federal power and changed American society.','The U.S. entered because of submarine warfare, economic ties, and the Zimmermann Telegram.','Propaganda, the Espionage Act, Great Migration, and Red Scare shaped the home front.','War changes the relationship between citizens and government.'],
+22:['The 1920s brought consumer culture, mass media, and cultural conflict.','Cars, radios, movies, advertising, and credit changed everyday life.','The Scopes Trial, immigration restriction, Harlem Renaissance, and flappers showed cultural tension.','The 1920s were modern, prosperous, and deeply divided.'],
+23:['The Great Depression caused economic collapse and political transformation.','Bank failures, unemployment, overproduction, and the Dust Bowl devastated Americans.','The New Deal expanded federal relief, recovery, reform, and social welfare.','The New Deal permanently changed expectations of government.'],
+24:['World War II made the United States a global superpower.','War production ended the Depression and changed work, migration, and gender roles.','Japanese American incarceration showed the limits of freedom during wartime.','WWII transformed domestic society and global politics.'],
+25:['The Cold War shaped foreign policy and domestic life.','Containment guided the Truman Doctrine, Marshall Plan, NATO, Korea, and Vietnam.','McCarthyism, nuclear fear, and anti-communism shaped politics and culture.','The Cold War influenced nearly every part of postwar America.'],
+26:['Postwar prosperity reshaped American life through suburbs, consumer culture, and the baby boom.','Highways, mortgages, television, and advertising supported suburban growth.','Many Americans were excluded from prosperity, and civil rights activism expanded.','The 1950s mixed prosperity, conformity, inequality, and protest.'],
+27:['The 1960s brought civil rights, protest movements, Vietnam, feminism, and counterculture.','Civil rights activists used protest, court cases, and federal legislation to challenge segregation.','Vietnam fueled distrust, antiwar protest, and generational conflict.','The 1960s expanded rights but intensified political and cultural conflict.'],
+28:['The 1970s brought economic problems and distrust in government.','Watergate damaged faith in the presidency and federal institutions.','Stagflation and oil shocks challenged postwar prosperity.','The 1970s weakened confidence and opened space for conservatism.'],
+29:['Conservatism rose through Reagan, tax cuts, deregulation, religious activism, and Cold War politics.','Reagan promoted smaller government, lower taxes, and military buildup.','The Cold War ended as the Soviet Union weakened and Eastern Europe changed.','The right reshaped American politics after the 1970s.'],
+30:['Recent history includes globalization, terrorism, technology, immigration debates, and polarization.','The internet and global trade transformed communication, work, and culture.','After 9/11, the War on Terror raised debates over security and civil liberties.','Modern issues continue older APUSH themes about power, rights, identity, and inequality.']
+};
+const brainrotVideos=['subway.mp4','parkour.mp4'];let videoIndex=0,completed=new Set();function complete(n){completed.add(n);document.getElementById('doneCount').textContent=Math.min(completed.size,3);document.getElementById('goalBar').style.width=Math.min(completed.size/3*100,100)+'%'}function rand(a){return a[Math.floor(Math.random()*a.length)]}function shuffle(a){return[...a].sort(()=>Math.random()-.5)}function jump(id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
+let currentConnection,selected=[],solved=[];function newConnection(){currentConnection=rand(connectionSets);selected=[];solved=[];renderConnection()}function renderConnection(){const used=solved.flatMap(g=>currentConnection.groups[g]);const terms=shuffle(Object.values(currentConnection.groups).flat()).filter(t=>!used.includes(t));document.getElementById('solvedGroups').innerHTML=solved.map(g=>`<div class="solved"><b>${g}</b><br>${currentConnection.groups[g].join(', ')}</div>`).join('');document.getElementById('connectionGrid').innerHTML=terms.map(t=>`<button class="term ${selected.includes(t)?'selected':''}" onclick="toggleTerm('${t.replace(/'/g,"\\'")}')">${t}</button>`).join('');document.getElementById('connectionMsg').textContent='Select four related terms.'}function toggleTerm(t){if(selected.includes(t))selected=selected.filter(x=>x!==t);else if(selected.length<4)selected.push(t);renderConnection()}function submitConnection(){if(selected.length!==4){document.getElementById('connectionMsg').textContent='Pick exactly four.';return}const match=Object.keys(currentConnection.groups).find(g=>selected.every(t=>currentConnection.groups[g].includes(t)));if(match){solved.push(match);selected=[];if(solved.length===4)complete('connections');renderConnection()}else document.getElementById('connectionMsg').textContent='Not quite. Try another group.'}
+let word,guesses=[],currentLetters=[];function newWord(){word=rand(words);guesses=[];currentLetters=Array(word.answer.length).fill('');renderWord()}function renderWord(){document.getElementById('wordClue').textContent=word.clue;document.getElementById('wordRows').innerHTML=Array.from({length:6}).map((_,r)=>`<div class="row">${Array.from({length:word.answer.length}).map((_,i)=>{const l=(guesses[r]||'')[i]||'';let c='box';if(l)c+=word.answer[i]===l?' correct':word.answer.includes(l)?' close':' wrong';return`<div class="${c}">${l}</div>`}).join('')}</div>`).join('');document.getElementById('letterInputs').innerHTML=currentLetters.map((l,i)=>`<input class="letterInput" maxlength="1" value="${l}" oninput="typeLetter(this,${i})">`).join('');document.getElementById('wordMsg').textContent='Type into the boxes.'}function typeLetter(el,i){currentLetters[i]=el.value.toUpperCase().replace(/[^A-Z]/g,'').slice(-1);el.value=currentLetters[i];if(el.value&&el.nextElementSibling)el.nextElementSibling.focus()}function submitWord(){const g=currentLetters.join('');if(g.length!==word.answer.length||currentLetters.includes('')){document.getElementById('wordMsg').textContent='Fill every box.';return}guesses.push(g);currentLetters=Array(word.answer.length).fill('');if(g===word.answer)complete('word');renderWord();if(g===word.answer)document.getElementById('wordMsg').textContent='Correct!'}
+let timeline=[];function newTimeline(){timeline=shuffle(timelineMaster).slice(0,4);renderTimeline()}function renderTimeline(){document.getElementById('timelineList').innerHTML=timeline.map(e=>`<div class="timelineItem">${e}</div>`).join('')}function shuffleTimeline(){timeline=shuffle(timeline);renderTimeline()}function checkTimeline(){const correct=[...timeline].sort((a,b)=>timelineMaster.indexOf(a)-timelineMaster.indexOf(b));const ok=JSON.stringify(timeline)===JSON.stringify(correct);document.getElementById('timelineMsg').textContent=ok?'Correct!':'Not quite. Press shuffle and try again.';if(ok)complete('timeline')}
+let quote;function newQuote(){quote=rand(quotes);document.getElementById('quoteBox').textContent='“'+quote.quote+'”';document.getElementById('quoteChoices').innerHTML=quote.options.map(o=>`<button class="choice" onclick="pickQuote(this,'${o}')">${o}</button>`).join('')}function pickQuote(btn,o){[...document.querySelectorAll('#quoteChoices .choice')].forEach(b=>b.disabled=true);if(o===quote.answer){btn.classList.add('good');complete('quote')}else btn.classList.add('bad')}
+function newMCQ(){const m=rand(mcqs);document.getElementById('mcqBox').innerHTML=`<div class="card"><p><b>Stimulus:</b> ${m.stimulus}</p><h3>${m.question}</h3>${m.choices.map(c=>`<button class="choice" onclick="answerMCQ(this,'${c}','${m.answer}','${m.explanation}')">${c}</button>`).join('')}<p id="mcqExplain"></p></div>`}function answerMCQ(btn,c,a,e){btn.classList.add(c===a?'good':'bad');document.getElementById('mcqExplain').textContent=e}
+function setupReader(){const c=document.getElementById('chapterSelect');c.innerHTML=chapterNames.map((n,i)=>`<option value="${i}">${i+1}. ${n}</option>`).join('');updateSectionSelect()}function updateSectionSelect(){const s=document.getElementById('sectionSelect');s.innerHTML=sectionNames.map((n,i)=>`<option value="${i}">${n}</option>`).join('');loadBrainrotChapter()}function audioName(c,s){return`yawp-${c+1}-${s+1}.mp3`}function loadBrainrotChapter(){const c=Number(document.getElementById('chapterSelect').value||0),s=Number(document.getElementById('sectionSelect').value||0);document.getElementById('brainrotTitle').textContent=`${c+1}. ${chapterNames[c]}: ${sectionNames[s]}`;document.getElementById('brainrotText').textContent=(sectionText[c+1]||sectionText[1])[s];const a=document.getElementById('brainrotAudio');a.src=audioName(c,s);a.load();randomVideo()}function tryNextBrainrotVideo(){videoIndex=(videoIndex+1)%brainrotVideos.length;const v=document.getElementById('brainrotVideo');v.src=brainrotVideos[videoIndex];v.load();v.play().catch(()=>{})}function randomVideo(){videoIndex=Math.floor(Math.random()*brainrotVideos.length);const v=document.getElementById('brainrotVideo');v.src=brainrotVideos[videoIndex];v.load();v.play().catch(()=>{})}function playHumanVoice(){const a=document.getElementById('brainrotAudio'),v=document.getElementById('brainrotVideo');v.play().catch(()=>{});a.play().catch(()=>alert('Upload the matching MP3 file first. Example: yawp-1-1.mp3'))}function pauseHumanVoice(){document.getElementById('brainrotAudio').pause()}function nextSection(){let c=document.getElementById('chapterSelect'),s=document.getElementById('sectionSelect');if(Number(s.value)<sectionNames.length-1)s.value=Number(s.value)+1;else if(Number(c.value)<chapterNames.length-1){c.value=Number(c.value)+1;s.value=0}else{s.value=0;c.value=0}loadBrainrotChapter()}
+newConnection();newWord();newTimeline();newQuote();newMCQ();setupReader();randomVideo();
+</script>
 </body>
 </html>
