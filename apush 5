@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liberty Learner | APUSH Games</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f0e8; color: #1c1917; }
+    header { background: white; border-bottom: 1px solid #d6d3d1; position: sticky; top: 0; z-index: 10; }
+    .wrap { max-width: 1150px; margin: auto; padding: 24px; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    h1 { margin: 0; font-size: 42px; letter-spacing: -1px; }
+    h2 { font-size: 30px; margin: 0 0 8px; }
+    h3 { margin: 0 0 8px; }
+    p { line-height: 1.5; }
+    nav button, button { cursor: pointer; }
+    nav { display: flex; gap: 14px; flex-wrap: wrap; }
+    nav button { border: 0; background: transparent; font-weight: bold; font-size: 14px; }
+    nav button:hover { color: #dc2626; }
+    .grid { display: grid; gap: 24px; }
+    .hero { grid-template-columns: 2fr 1fr; align-items: stretch; }
+    .two { grid-template-columns: repeat(2, 1fr); }
+    .four { grid-template-columns: repeat(4, 1fr); }
+    .card { background: white; border: 1px solid #ddd6ce; border-radius: 28px; padding: 28px; box-shadow: 0 12px 28px rgba(0,0,0,.08); }
+    .dark { background: linear-gradient(135deg, #1c1917, #44403c); color: white; }
+    .muted { color: #78716c; }
+    .big { font-size: 52px; font-weight: 900; margin: 8px 0; }
+    .progress { height: 14px; background: #57534e; border-radius: 999px; overflow: hidden; }
+    .bar { height: 100%; width: 0%; background: #f87171; transition: .3s; }
+    .game-tile { padding: 0; overflow: hidden; }
+    .tile-top { height: 130px; padding: 22px; color: white; font-size: 44px; display: flex; justify-content: space-between; }
+    .red { background: linear-gradient(135deg, #ef4444, #fb923c); }
+    .blue { background: linear-gradient(135deg, #3b82f6, #22d3ee); }
+    .purple { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+    .green { background: linear-gradient(135deg, #22c55e, #10b981); }
+    .tile-body { padding: 22px; }
+    .term-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .term { min-height: 80px; border: 1px solid #d6d3d1; background: #f5f5f4; border-radius: 16px; padding: 10px; font-weight: 800; }
+    .term.selected { background: #1c1917; color: white; transform: scale(1.03); }
+    .solved { background: #dcfce7; border: 1px solid #86efac; border-radius: 16px; padding: 14px; margin-bottom: 10px; color: #14532d; }
+    .btn { border: 0; background: #1c1917; color: white; padding: 13px 18px; border-radius: 16px; font-weight: 800; }
+    .btn:hover { background: #dc2626; }
+    .btn.secondary { background: white; color: #1c1917; border: 1px solid #d6d3d1; }
+    .btn.secondary:hover { background: #f5f5f4; }
+    .letter-row { display: flex; justify-content: center; gap: 7px; margin: 8px 0; flex-wrap: wrap; }
+    .box, .letter-input { width: 46px; height: 46px; border: 2px solid #d6d3d1; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; text-align: center; text-transform: uppercase; }
+    .correct { background: #22c55e; color: white; border-color: #22c55e; }
+    .close { background: #facc15; border-color: #facc15; }
+    .wrong { background: #78716c; color: white; border-color: #78716c; }
+    .timeline-item { background: #f5f5f4; border: 1px solid #d6d3d1; border-radius: 16px; padding: 16px; font-weight: 800; margin: 8px 0; }
+    .quote { background: #f5f5f4; border: 1px solid #d6d3d1; border-radius: 18px; padding: 28px; font-size: 25px; font-weight: 900; font-style: italic; }
+    .choice { width: 100%; text-align: left; background: #fafaf9; border: 1px solid #d6d3d1; border-radius: 16px; padding: 15px; font-weight: 800; margin-top: 10px; }
+    .choice.good { background: #dcfce7; border-color: #86efac; }
+    .choice.bad { background: #fee2e2; border-color: #fca5a5; }
+    .meme-section { background: #0c0a09; color: white; border-radius: 28px; padding: 28px; }
+    .scroll { height: 680px; overflow-y: scroll; scroll-snap-type: y mandatory; border-radius: 24px; background: black; }
+    .meme { height: 680px; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #292524; background: linear-gradient(135deg, #1c1917, #450a0a); }
+    .phone { width: 330px; min-height: 590px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 34px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; text-align: center; }
+    .emoji { font-size: 80px; }
+    .tag { background: #ef4444; padding: 7px 11px; border-radius: 999px; font-size: 12px; font-weight: 900; display: inline-block; }
+    textarea { width: 100%; min-height: 130px; border: 1px solid #d6d3d1; border-radius: 16px; padding: 14px; font-family: Arial; }
+    @media (max-width: 900px) { .hero, .two, .four { grid-template-columns: 1fr; } .term-grid { grid-template-columns: repeat(2, 1fr); } h1 { font-size: 32px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap top">
+      <div>
+        <h1>Liberty Learner</h1>
+        <div class="muted">APUSH Games, MCQ Practice, Writing Help & Memes</div>
+      </div>
+      <nav>
+        <button onclick="jump('games')">Games</button>
+        <button onclick="jump('mcq')">MCQ</button>
+        <button onclick="jump('writing')">Writing</button>
+        <button onclick="jump('memes')">Memes</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="grid hero">
+      <div class="card">
+        <h2>APUSH Game Hub</h2>
+        <p class="muted">Play fast games that build APUSH recall without feeling like a worksheet.</p>
+        <div class="grid two">
+          <div class="card"><h3>🎮 Games</h3><p>Connections, Word Guess, Timeline Rush, and Quote Rush.</p></div>
+          <div class="card"><h3>📝 Practice</h3><p>MCQ practice and writing help for DBQs, LEQs, and SAQs.</p></div>
+        </div>
+      </div>
+      <div class="card dark">
+        <div>Today’s Study Goal</div>
+        <div class="big"><span id="doneCount">0</span>/3</div>
+        <p>Complete three activities today.</p>
+        <div class="progress"><div id="goalBar" class="bar"></div></div>
+      </div>
+    </section>
+
+    <section id="games" style="margin-top:40px;">
+      <h2>Game Modes</h2>
+      <p class="muted">Replayable APUSH games that regenerate.</p>
+      <div class="grid four">
+        <div class="card game-tile"><div class="tile-top red">🧩</div><div class="tile-body"><h3>APUSH Connections</h3><p>Group mixed terms into hidden categories.</p></div></div>
+        <div class="card game-tile"><div class="tile-top blue">🔤</div><div class="tile-body"><h3>Word Guess</h3><p>Guess APUSH vocab with hard clues.</p></div></div>
+        <div class="card game-tile"><div class="tile-top purple">⏳</div><div class="tile-body"><h3>Timeline Rush</h3><p>Put events in historical order.</p></div></div>
+        <div class="card game-tile"><div class="tile-top green">💬</div><div class="tile-body"><h3>Quote Rush</h3><p>Guess the historical figure.</p></div></div>
+      </div>
+    </section>
+
+    <section class="grid two" style="margin-top:40px;">
+      <div class="card">
+        <h2>APUSH Connections</h2>
+        <p class="muted">Select four related terms.</p>
+        <div id="solvedGroups"></div>
+        <div id="connectionGrid" class="term-grid"></div>
+        <p id="connectionMsg"></p>
+        <button class="btn" onclick="submitConnection()">Submit</button>
+        <button class="btn secondary" onclick="newConnection()">New Puzzle</button>
+      </div>
+
+      <div class="card">
+        <h2>APUSH Word Guess</h2>
+        <p class="muted">Hard clue: <b id="wordClue"></b></p>
+        <div id="wordRows"></div>
+        <div id="letterInputs" class="letter-row"></div>
+        <p id="wordMsg"></p>
+        <button class="btn" onclick="submitWord()">Guess</button>
+        <button class="btn secondary" onclick="newWord()">New Word</button>
+      </div>
+
+      <div class="card">
+        <h2>Timeline Rush</h2>
+        <p class="muted">Earliest to latest.</p>
+        <div id="timelineList"></div>
+        <p id="timelineMsg"></p>
+        <button class="btn" onclick="shuffleTimeline()">Shuffle</button>
+        <button class="btn secondary" onclick="checkTimeline()">Check Order</button>
+      </div>
+
+      <div class="card">
+        <h2>Quote Rush</h2>
+        <p class="muted">Who said it?</p>
+        <div id="quoteBox" class="quote"></div>
+        <div id="quoteChoices"></div>
+        <button class="btn" onclick="newQuote()" style="margin-top:14px;">New Quote</button>
+      </div>
+    </section>
+
+    <section id="mcq" class="card" style="margin-top:40px;">
+      <h2>Practice MCQ Page</h2>
+      <p class="muted">AP-style multiple choice practice.</p>
+      <div id="mcqBox"></div>
+      <button class="btn" onclick="newMCQ()">New MCQ</button>
+    </section>
+
+    <section id="writing" class="card" style="margin-top:40px;">
+      <h2>Writing Help Page</h2>
+      <p class="muted">Plan DBQs, LEQs, and SAQs.</p>
+      <div class="grid two">
+        <div><h3>Thesis Builder</h3><textarea placeholder="Write your thesis here..."></textarea></div>
+        <div><h3>Evidence Bank</h3><textarea placeholder="List specific evidence here..."></textarea></div>
+        <div><h3>Contextualization</h3><textarea placeholder="What broader historical trend connects?"></textarea></div>
+        <div><h3>Rubric Checklist</h3><p>✅ Thesis<br>✅ Context<br>✅ Evidence<br>✅ Reasoning<br>✅ Complexity</p></div>
+      </div>
+    </section>
+
+    <section id="memes" class="meme-section" style="margin-top:40px;">
+      <h2>Vertical APUSH Meme Feed</h2>
+      <p class="muted">Scroll vertically. APUSH memes only.</p>
+      <div id="memeScroll" class="scroll"></div>
+    </section>
+  </main>
+
+  <script>
+    const connectionSets = [
+      { groups: { 'Founding Documents': ['Declaration of Independence','Articles of Confederation','Constitution','Federalist Papers'], 'Early Politics': ['Federalists','Democratic-Republicans','Hamilton','Jefferson'], 'Market Revolution': ['Erie Canal','Lowell System','Cotton Gin','Telegraph'], 'Expansion': ['Manifest Destiny','Mexican-American War','Oregon Trail','Treaty of Guadalupe Hidalgo'] } },
+      { groups: { 'Court Cases': ['Marbury v. Madison','Dred Scott','Plessy v. Ferguson','Brown v. Board'], 'Reforms': ['Abolitionism','Temperance','Women’s Suffrage','Second Great Awakening'], 'Cold War': ['Truman Doctrine','Marshall Plan','NATO','Containment'], 'New Deal': ['CCC','WPA','Social Security Act','FDIC'] } }
+    ];
+    const words = [
+      { answer:'TARIFF', clue:'Trade tax' }, { answer:'EMBARGO', clue:'Trade ban' }, { answer:'FEDERAL', clue:'National power' },
+      { answer:'NEWDEAL', clue:'FDR programs' }, { answer:'TRUMAN', clue:'Containment president' }, { answer:'MONROE', clue:'Doctrine president' }
+    ];
+    const timelineMaster = ['Louisiana Purchase','Missouri Compromise','Compromise of 1850','Civil War Begins','Reconstruction Ends','Spanish-American War','New Deal','Brown v. Board','Vietnam War'];
+    const quotes = [
+      { quote:'The only thing we have to fear is fear itself.', answer:'Franklin Roosevelt', options:['Franklin Roosevelt','Theodore Roosevelt','Woodrow Wilson','Harry Truman'] },
+      { quote:'Speak softly and carry a big stick.', answer:'Theodore Roosevelt', options:['Andrew Jackson','Theodore Roosevelt','Dwight Eisenhower','John Adams'] },
+      { quote:'A house divided against itself cannot stand.', answer:'Abraham Lincoln', options:['Frederick Douglass','Thomas Jefferson','Abraham Lincoln','Ulysses Grant'] }
+    ];
+    const mcqs = [
+      { stimulus:'Late-1800s farmers argued railroads and banks unfairly hurt rural Americans.', question:'Which movement reflected this concern?', choices:['Populist Movement','Great Society','Second Great Awakening','Lost Generation'], answer:'Populist Movement', explanation:'Populists focused on railroad regulation and monetary reform.' },
+      { stimulus:'The federal government increased overseas involvement in the late 1800s.', question:'Which event best supports this?', choices:['Spanish-American War','Whiskey Rebellion','Shays Rebellion','Seneca Falls Convention'], answer:'Spanish-American War', explanation:'The war marked major overseas expansion.' }
+    ];
+    const memes = [
+      ['🏦','Hamilton defending the bank','When someone says the Constitution does not mention a bank.'],
+      ['💥','Jackson vs. the Bank','The Second Bank sees Andrew Jackson log on.'],
+      ['🗺️','Manifest Destiny','The map gets bigger and so does sectional tension.'],
+      ['📰','Muckrakers','Me after reading one suspicious meatpacking report.'],
+      ['🧊','Cold War containment','Trying to stop communism like a group project problem.']
+    ];
+
+    let completed = new Set();
+    function complete(name){ completed.add(name); document.getElementById('doneCount').textContent = Math.min(completed.size,3); document.getElementById('goalBar').style.width = Math.min(completed.size/3*100,100)+'%'; }
+    function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+    function jump(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+    let currentConnection, selected=[], solved=[];
+    function newConnection(){ currentConnection = rand(connectionSets); selected=[]; solved=[]; renderConnection(); }
+    function renderConnection(){
+      const terms = shuffle(Object.values(currentConnection.groups).flat()).filter(t => !solved.flatMap(g=>currentConnection.groups[g]).includes(t));
+      document.getElementById('solvedGroups').innerHTML = solved.map(g=>`<div class="solved"><b>${g}</b><br>${currentConnection.groups[g].join(', ')}</div>`).join('');
+      document.getElementById('connectionGrid').innerHTML = terms.map(t=>`<button class="term ${selected.includes(t)?'selected':''}" onclick="toggleTerm('${t.replace(/'/g,"\\'")}')">${t}</button>`).join('');
+      document.getElementById('connectionMsg').textContent = 'Select four related terms.';
+    }
+    function toggleTerm(t){ if(selected.includes(t)) selected=selected.filter(x=>x!==t); else if(selected.length<4) selected.push(t); renderConnection(); }
+    function submitConnection(){
+      if(selected.length!==4){ document.getElementById('connectionMsg').textContent='Pick exactly four.'; return; }
+      const match = Object.keys(currentConnection.groups).find(g => selected.every(t=>currentConnection.groups[g].includes(t)));
+      if(match){ solved.push(match); selected=[]; if(solved.length===4) complete('connections'); renderConnection(); }
+      else document.getElementById('connectionMsg').textContent='Not quite. Try another group.';
+    }
+
+    let word, guesses=[], currentLetters=[];
+    function newWord(){ word=rand(words); guesses=[]; currentLetters=Array(word.answer.length).fill(''); renderWord(); }
+    function renderWord(){
+      document.getElementById('wordClue').textContent=word.clue;
+      document.getElementById('wordRows').innerHTML = Array.from({length:6}).map((_,r)=>`<div class="letter-row">${Array.from({length:word.answer.length}).map((_,i)=>{ const l=(guesses[r]||'')[i]||''; let c='box'; if(l){ c += word.answer[i]===l?' correct':word.answer.includes(l)?' close':' wrong'; } return `<div class="${c}">${l}</div>` }).join('')}</div>`).join('');
+      document.getElementById('letterInputs').innerHTML = currentLetters.map((l,i)=>`<input class="letter-input" maxlength="1" value="${l}" oninput="typeLetter(this,${i})">`).join('');
+      document.getElementById('wordMsg').textContent='Type into the boxes.';
+    }
+    function typeLetter(el,i){ currentLetters[i]=el.value.toUpperCase().replace(/[^A-Z]/g,'').slice(-1); el.value=currentLetters[i]; if(el.value && el.nextElementSibling) el.nextElementSibling.focus(); }
+    function submitWord(){ const g=currentLetters.join(''); if(g.length!==word.answer.length || currentLetters.includes('')){ document.getElementById('wordMsg').textContent='Fill every box.'; return; } guesses.push(g); currentLetters=Array(word.answer.length).fill(''); if(g===word.answer) complete('word'); renderWord(); if(g===word.answer) document.getElementById('wordMsg').textContent='Correct!'; }
+
+    let timeline=[];
+    function newTimeline(){ timeline=shuffle(timelineMaster).slice(0,4); renderTimeline(); }
+    function renderTimeline(){ document.getElementById('timelineList').innerHTML=timeline.map(e=>`<div class="timeline-item">${e}</div>`).join(''); }
+    function shuffleTimeline(){ timeline=shuffle(timeline); renderTimeline(); }
+    function checkTimeline(){ const correct=[...timeline].sort((a,b)=>timelineMaster.indexOf(a)-timelineMaster.indexOf(b)); const ok=JSON.stringify(timeline)===JSON.stringify(correct); document.getElementById('timelineMsg').textContent=ok?'Correct!':'Not quite. Press shuffle and try again.'; if(ok) complete('timeline'); }
+
+    let quote;
+    function newQuote(){ quote=rand(quotes); document.getElementById('quoteBox').textContent='“'+quote.quote+'”'; document.getElementById('quoteChoices').innerHTML=quote.options.map(o=>`<button class="choice" onclick="pickQuote(this,'${o}')">${o}</button>`).join(''); }
+    function pickQuote(btn,o){ [...document.querySelectorAll('#quoteChoices .choice')].forEach(b=>b.disabled=true); if(o===quote.answer){ btn.classList.add('good'); complete('quote'); } else { btn.classList.add('bad'); } }
+
+    function newMCQ(){ const m=rand(mcqs); document.getElementById('mcqBox').innerHTML=`<div class="card"><p><b>Stimulus:</b> ${m.stimulus}</p><h3>${m.question}</h3>${m.choices.map(c=>`<button class="choice" onclick="answerMCQ(this,'${c}','${m.answer}','${m.explanation}')">${c}</button>`).join('')}<p id="mcqExplain"></p></div>`; }
+    function answerMCQ(btn,c,a,e){ btn.classList.add(c===a?'good':'bad'); document.getElementById('mcqExplain').textContent=e; }
+
+    function renderMemes(){ document.getElementById('memeScroll').innerHTML=memes.map((m,i)=>`<div class="meme"><div class="phone"><div><span class="tag">APUSH Meme #${i+1}</span></div><div><div class="emoji">${m[0]}</div><h2>${m[1]}</h2><p>${m[2]}</p></div><div>❤️ Review · 💬 Explain · ↗ Share</div></div></div>`).join(''); }
+
+    newConnection(); newWord(); newTimeline(); newQuote(); newMCQ(); renderMemes();
+  </script>
+</body>
+</html>
